@@ -182,15 +182,20 @@ function parse_prices($html) {
     if (preg_match_all($pattern, $html, $matches, PREG_SET_ORDER)) {
         foreach ($matches as $m) {
             $slug = $m[1];
-            $price = strip_tags($m[2]);
-            $change = strip_tags($m[3]);
+            // Trim whitespace, tabs, newlines
+            $price = trim(strip_tags($m[2]));
+            $change = trim(strip_tags($m[3]));
             
-            // Determine direction from class
+            // Determine direction from class (tg-1=up, tg-0=down)
             $dir = '';
-            if (preg_match('/tg-1/i', $m[0])) $dir = 'up';
-            elseif (preg_match('/tg-0/i', $m[0])) $dir = 'down';
+            $fullRow = $m[0];
+            if (preg_match('/class="[^"]*tg-1[^"]*"/i', $fullRow)) {
+                $dir = 'up';
+            } elseif (preg_match('/class="[^"]*tg-0[^"]*"/i', $fullRow)) {
+                $dir = 'down';
+            }
             
-            if (!isset($prices[$slug])) {
+            if (!isset($prices[$slug]) && $price !== '') {
                 $prices[$slug] = [
                     'p' => $price,
                     'c' => $change,
