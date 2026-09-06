@@ -186,13 +186,12 @@ function parse_prices($html) {
             $price = trim(strip_tags($m[2]));
             $change = trim(strip_tags($m[3]));
             
-            // Determine direction from class (tg-1=up, tg-0=down)
+            // Determine direction from span class in change cell: low=down, high=up
             $dir = '';
-            $fullRow = $m[0];
-            if (preg_match('/class="[^"]*tg-1[^"]*"/i', $fullRow)) {
-                $dir = 'up';
-            } elseif (preg_match('/class="[^"]*tg-0[^"]*"/i', $fullRow)) {
+            if (stripos($m[3], 'class="low"') !== false || stripos($m[3], "class='low'") !== false) {
                 $dir = 'down';
+            } elseif (stripos($m[3], 'class="high"') !== false || stripos($m[3], "class='high'") !== false) {
+                $dir = 'up';
             }
             
             if (!isset($prices[$slug]) && $price !== '') {
