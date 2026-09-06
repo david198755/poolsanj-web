@@ -96,9 +96,23 @@ function scrape_tgju() {
         'retail_gerami'    => ['cat' => 'سکه', 'name' => 'گرمی', 'icon' => '🔹'],
         'coin_blubber'     => ['cat' => 'سکه', 'name' => 'حباب سکه', 'icon' => '🫧'],
         // Crypto
-        'crypto-bitcoin'   => ['cat' => 'کریپتو', 'name' => 'بیتکوین', 'icon' => '₿'],
-        'crypto-tether'    => ['cat' => 'کریپتو', 'name' => 'تتر', 'icon' => '₮'],
-        'crypto-ethereum'  => ['cat' => 'کریپتو', 'name' => 'اتریوم', 'icon' => '⟠'],
+        'crypto-bitcoin'   => ['cat' => 'کریپتو', 'name' => 'بیتکوین', 'icon' => '🟠'],
+        'crypto-tether'    => ['cat' => 'کریپتو', 'name' => 'تتر', 'icon' => '💵'],
+        'crypto-ethereum'  => ['cat' => 'کریپتو', 'name' => 'اتریوم', 'icon' => '🔷'],
+        'crypto-bnb'       => ['cat' => 'کریپتو', 'name' => 'بایننس کوین', 'icon' => '🟡'],
+        'crypto-solana'    => ['cat' => 'کریپتو', 'name' => 'سولانا', 'icon' => '🟣'],
+        'crypto-ripple'    => ['cat' => 'کریپتو', 'name' => 'ریپل', 'icon' => '✖️'],
+        'crypto-dogecoin'  => ['cat' => 'کریپتو', 'name' => 'دوج کوین', 'icon' => '🐕'],
+        'crypto-tron'      => ['cat' => 'کریپتو', 'name' => 'ترون', 'icon' => '⚡️'],
+        'crypto-cardano'   => ['cat' => 'کریپتو', 'name' => 'کاردانو', 'icon' => '🔵'],
+        'crypto-litecoin'  => ['cat' => 'کریپتو', 'name' => 'لایت کوین', 'icon' => '🔘'],
+        'crypto-bitcoin-cash' => ['cat' => 'کریپتو', 'name' => 'بیت‌کوین کش', 'icon' => '🔶'],
+        'crypto-stellar'   => ['cat' => 'کریپتو', 'name' => 'استellar', 'icon' => '⭐️'],
+        'crypto-polkadot'  => ['cat' => 'کریپتو', 'name' => 'پولکادات', 'icon' => '🔮'],
+        'crypto-avalanche' => ['cat' => 'کریپتو', 'name' => 'آوالانچ', 'icon' => '🔺'],
+        'crypto-dash'      => ['cat' => 'کریپتو', 'name' => 'دش', 'icon' => '🌀'],
+        'crypto-shiba-inu' => ['cat' => 'کریپتو', 'name' => 'شیبا اینو', 'icon' => '🐾'],
+        'crypto-toncoin'   => ['cat' => 'کریپتو', 'name' => 'تون‌کوین', 'icon' => '💎'],
     ];
     
     foreach ($mapping as $slug => $meta) {
