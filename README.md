@@ -1,0 +1,1 @@
+# PoolSanj Web\n\nScrollView-based price display for PoolSanj Android app.\n\n## Setup\n1. Upload files to your cPanel hosting\n2. Ensure PHP cURL is enabled\n3. Access via browser\n\n## Features\n- Live prices from TGJU.org\n- Auto-refresh every 30s\n- Dark theme, mobile-first\n- Categories: Currency, Gold, Coin, Crypto
