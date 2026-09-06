@@ -176,30 +176,63 @@ function scrape_tgju() {
 function parse_prices($html) {
     $prices = [];
     
-    // Match tr with data-market-nameslug
-    $pattern = '/data-market-nameslug="([^"]+)".*?<td[^>]*>(.*?)<\/td>.*?<td[^>]*>(.*?)<\/td>/s';
+    // Match each <tr> that contains data-market-nameslug
+    $trPattern = '/<tr\b[^>]*data-market-nameslug="([^"]+)"[^>]*>(.*?)<\/tr>/si';
     
-    if (preg_match_all($pattern, $html, $matches, PREG_SET_ORDER)) {
-        foreach ($matches as $m) {
-            $slug = $m[1];
-            // Trim whitespace, tabs, newlines
-            $price = trim(strip_tags($m[2]));
-            $change = trim(strip_tags($m[3]));
+    if (preg_match_all($trPattern, $html, $trMatches, PREG_SET_ORDER)) {
+        foreach ($trMatches as $tr) {
+            $slug = $tr[1];
+            $rowHtml = $tr[2];
             
-            // Determine direction from span class in change cell: low=down, high=up
+            // Find direction: only inside <span> or <div> (not on <td> market-low/market-high)
             $dir = '';
-            if (stripos($m[3], 'class="low"') !== false || stripos($m[3], "class='low'") !== false) {
+            if (preg_match('/<(?:span|div)\s+class=["\']low["\']/', $rowHtml)) {
                 $dir = 'down';
-            } elseif (stripos($m[3], 'class="high"') !== false || stripos($m[3], "class='high'") !== false) {
+            } elseif (preg_match('/<(?:span|div)\s+class=["\']high["\']/', $rowHtml)) {
                 $dir = 'up';
             }
             
-            if (!isset($prices[$slug]) && $price !== '') {
-                $prices[$slug] = [
-                    'p' => $price,
-                    'c' => $change,
-                    'dir' => $dir
-                ];
+            // Extract all <td> contents
+            preg_match_all('/<td[^>]*>(.*?)<\/td>/si', $rowHtml, $tds);
+            
+            // Find price: look for <td class="nf"> (main table) or <td class="market-price"> (secondary)
+            $price = '';
+            $change = '';
+            foreach ($tds[1] as $i => $tdHtml) {
+                $tdTag = $tds[0][$i];
+                $clean = trim(strip_tags($tdHtml));
+                
+                // Price cell: class="nf" or class="market-price"
+                if ($price === '' && $clean !== '' && preg_match('/class=["\'](?:nf|market-price)["\']/', $tdTag)) {
+                    $price = $clean;
+                }
+                
+                // Change cell: contains <span class="high/low"> or <div class="high/low">
+                if ($change === '' && preg_match('/<(?:span|div)\s+class=["\'](?:low|high)["\']/', $tdTag)) {
+                    $change = $clean;
+                }
+            }
+            
+            // Fallback: if no price found via class, use first non-empty td
+            if ($price === '' && !empty($tds[1])) {
+                foreach ($tds[1] as $tdHtml) {
+                    $clean = trim(strip_tags($tdHtml));
+                    if ($clean !== '' && preg_match('/^\d/', $clean)) {
+                        $price = $clean;
+                        break;
+                    }
+                }
+            }
+            
+            if ($price !== '') {
+                // Overwrite if: no previous match, OR new match has direction but old doesn't
+                if (!isset($prices[$slug]) || ($dir !== '' && ($prices[$slug]['dir'] ?? '') === '')) {
+                    $prices[$slug] = [
+                        'p' => $price,
+                        'c' => $change,
+                        'dir' => $dir
+                    ];
+                }
             }
         }
     }
