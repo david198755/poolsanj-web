@@ -145,7 +145,7 @@ function scrape_tgju() {
         'crypto-shiba-inu' => ['cat' => 'کریپتو', 'name' => 'شیبا اینو', 'icon' => '🐾'],
         'crypto-toncoin'   => ['cat' => 'کریپتو', 'name' => 'تون‌کوین', 'icon' => '💎'],
         'crypto-chainlink' => ['cat' => 'کریپتو', 'name' => 'چینلینک', 'icon' => '🔗'],
-        'crypto-polygon'    => ['cat' => 'کریپتو', 'name' => 'پالیگان', 'icon' => '🟥']],
+        'crypto-polygon'    => ['cat' => 'کریپتو', 'name' => 'پالیگان', 'icon' => '🟥'],
         'crypto-uniswap'    => ['cat' => 'کریپتو', 'name' => 'یونی‌سوآپ', 'icon' => '🦄'],
     ];
     
