@@ -113,6 +113,9 @@ function scrape_tgju() {
         'crypto-dash'      => ['cat' => 'کریپتو', 'name' => 'دش', 'icon' => '🌀'],
         'crypto-shiba-inu' => ['cat' => 'کریپتو', 'name' => 'شیبا اینو', 'icon' => '🐾'],
         'crypto-toncoin'   => ['cat' => 'کریپتو', 'name' => 'تون‌کوین', 'icon' => '💎'],
+        'crypto-chainlink' => ['cat' => 'کریپتو', 'name' => 'چینلینک', 'icon' => '🔗'],
+        'crypto-polygon'    => ['cat' => 'کریپتو', 'name' => 'پالیگان', 'icon' => '🟥']],
+        'crypto-uniswap'    => ['cat' => 'کریپتو', 'name' => 'یونی‌سوآپ', 'icon' => '🦄'],
     ];
     
     foreach ($mapping as $slug => $meta) {
