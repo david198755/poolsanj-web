@@ -63,10 +63,16 @@ function scrape_tgju() {
         $profileHtml = fetch_url("https://www.tgju.org/profile/$slug");
         if (!$profileHtml) continue;
         $found = false;
-        // Try full IRR price first (text-left class on profile pages)
-        if (preg_match('/<td[^>]*class=["\']text-left["\'][^>]*>([\d,]+)/', $profileHtml, $m)) {
-            $all[$slug] = ['p' => $m[1], 'c' => '', 'dir' => ''];
-            $found = true;
+        // Try full IRR price first (text-left class, second match = IRR value)
+        if (preg_match_all('/<td[^>]*class=["\']text-left["\'][^>]*>\s*([\d,]+)/', $profileHtml, $matches)) {
+            // Pick the value with commas (IRR) — typically 2nd match
+            foreach ($matches[1] as $val) {
+                if (strpos($val, ',') !== false) {
+                    $all[$slug] = ['p' => $val, 'c' => '', 'dir' => ''];
+                    $found = true;
+                    break;
+                }
+            }
         }
         // Fallback: USD price × dollar rate
         if (!$found && $dollarRate > 0) {
