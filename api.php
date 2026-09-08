@@ -195,12 +195,19 @@ function parse_prices($html) {
             // Extract all <td> contents
             preg_match_all('/<td[^>]*>(.*?)<\/td>/si', $rowHtml, $tds);
             
-            // Find price: look for <td class="nf"> (main table) or <td class="market-price"> (secondary)
+            // Find price: prefer market-price-irr (full IRR, e.g. bitcoin ~178,000,000,000)
+            // fallback: class="nf" (main table) or class="market-price" (secondary)
             $price = '';
+            $priceIrr = '';
             $change = '';
             foreach ($tds[1] as $i => $tdHtml) {
                 $tdTag = $tds[0][$i];
                 $clean = trim(strip_tags($tdHtml));
+                
+                // Full IRR price cell (secondary table has it for crypto)
+                if ($priceIrr === '' && $clean !== '' && preg_match('/class=["\']market-price-irr["\']/', $tdTag)) {
+                    $priceIrr = $clean;
+                }
                 
                 // Price cell: class="nf" or class="market-price"
                 if ($price === '' && $clean !== '' && preg_match('/class=["\'](?:nf|market-price)["\']/', $tdTag)) {
@@ -211,6 +218,11 @@ function parse_prices($html) {
                 if ($change === '' && preg_match('/<(?:span|div)\s+class=["\'](?:low|high)["\']/', $tdTag)) {
                     $change = $clean;
                 }
+            }
+            
+            // Prefer the full IRR price when available (crypto rows show USD in main table)
+            if ($priceIrr !== '') {
+                $price = $priceIrr;
             }
             
             // Fallback: if no price found via class, use first non-empty td
@@ -234,6 +246,23 @@ function parse_prices($html) {
                     ];
                 }
             }
+        }
+    }
+    
+    // For ANY crypto slug where price is USD (no comma-groups) and no IRR was found:
+    // convert to IRR using the dollar rate from the same page
+    if (isset($prices['price_dollar_rl']['p'])) {
+        $dollarRate = (float)str_replace(',', '', $prices['price_dollar_rl']['p']);
+        if ($dollarRate > 0) {
+            foreach ($prices as $slug => &$item) {
+                if (strpos($slug, 'crypto-') === 0 && strpos($item['p'], ',') === false) {
+                    $usd = (float)$item['p'];
+                    if ($usd > 0) {
+                        $item['p'] = number_format((int)round($usd * $dollarRate));
+                    }
+                }
+            }
+            unset($item);
         }
     }
     
