@@ -62,18 +62,25 @@ function scrape_tgju() {
     foreach ($missingCrypto as $slug) {
         $profileHtml = fetch_url("https://www.tgju.org/profile/$slug");
         if (!$profileHtml) continue;
-        // Extract USD price from profile page
-        if (preg_match('/<td[^>]*class=["\']nf["\'][^>]*>([\d\.]+)</', $profileHtml, $m)) {
-            $usd = (float)$m[1];
-            if ($usd > 0 && $dollarRate > 0) {
-                $all[$slug] = [
-                    'p' => number_format((int)round($usd * $dollarRate)),
-                    'c' => '',
-                    'dir' => ''
-                ];
+        $found = false;
+        // Try full IRR price first (text-left class on profile pages)
+        if (preg_match('/<td[^>]*class=["\']text-left["\'][^>]*>([\d,]+)/', $profileHtml, $m)) {
+            $all[$slug] = ['p' => $m[1], 'c' => '', 'dir' => ''];
+            $found = true;
+        }
+        // Fallback: USD price × dollar rate
+        if (!$found && $dollarRate > 0) {
+            $tds = [];
+            preg_match_all('/<td[^>]*>([\d\.]+)</', $profileHtml, $tds);
+            foreach ($tds[1] as $val) {
+                if ((float)$val > 0.001) {
+                    $all[$slug] = ['p' => number_format((int)round((float)$val * $dollarRate)), 'c' => '', 'dir' => ''];
+                    $found = true;
+                    break;
+                }
             }
         }
-        usleep(100000); // 100ms delay between requests
+        usleep(100000);
     }
     
     // Group by category
