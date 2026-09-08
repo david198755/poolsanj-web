@@ -56,6 +56,26 @@ function scrape_tgju() {
     $all = parse_prices($html);
     if (empty($all)) return null;
     
+    // Fetch missing crypto from TGJU profile pages (coins not on homepage)
+    $missingCrypto = array_diff(['crypto-bnb','crypto-chainlink','crypto-polygon','crypto-uniswap'], array_keys($all));
+    $dollarRate = isset($all['price_dollar_rl']) ? (float)str_replace(',', '', $all['price_dollar_rl']['p']) : 0;
+    foreach ($missingCrypto as $slug) {
+        $profileHtml = fetch_url("https://www.tgju.org/profile/$slug");
+        if (!$profileHtml) continue;
+        // Extract USD price from profile page
+        if (preg_match('/<td[^>]*class=["\']nf["\'][^>]*>([\d\.]+)</', $profileHtml, $m)) {
+            $usd = (float)$m[1];
+            if ($usd > 0 && $dollarRate > 0) {
+                $all[$slug] = [
+                    'p' => number_format((int)round($usd * $dollarRate)),
+                    'c' => '',
+                    'dir' => ''
+                ];
+            }
+        }
+        usleep(100000); // 100ms delay between requests
+    }
+    
     // Group by category
     $categories = [
         'ارز' => [
@@ -237,8 +257,11 @@ function parse_prices($html) {
             }
             
             if ($price !== '') {
-                // Overwrite if: no previous match, OR new match has direction but old doesn't
-                if (!isset($prices[$slug]) || ($dir !== '' && ($prices[$slug]['dir'] ?? '') === '')) {
+                // Always overwrite if this row has a full IRR price (more valuable than USD)
+                // or no previous match exists, or new match has direction but old doesn't
+                $hasIrr = strpos($price, ',') !== false;
+                $prevIrr = isset($prices[$slug]) && strpos($prices[$slug]['p'], ',') !== false;
+                if (!isset($prices[$slug]) || $hasIrr || (!$prevIrr && $dir !== '' && ($prices[$slug]['dir'] ?? '') === '')) {
                     $prices[$slug] = [
                         'p' => $price,
                         'c' => $change,
