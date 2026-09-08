@@ -120,14 +120,14 @@ function scrape_tgju() {
         'ons'              => ['cat' => 'طلا', 'name' => 'اونس جهانی', 'icon' => '🌍'],
         'gold_futures'     => ['cat' => 'طلا', 'name' => 'طلای آبشده', 'icon' => '💧'],
         // Coin
-        'retail_sekee'     => ['cat' => 'سکه', 'name' => 'سکه امامی', 'icon' => '🏛️'],
-        'sekeb'            => ['cat' => 'سکه', 'name' => 'سکه بهار آزادی', 'icon' => '🌸'],
-        'retail_nim'       => ['cat' => 'سکه', 'name' => 'نیم سکه', 'icon' => '½'],
+        'retail_sekee'     => ['cat' => 'سکه', 'name' => 'سکه امامی', 'icon' => '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="15" fill="#FFD54F" stroke="#F9A825" stroke-width="2"/><circle cx="16" cy="16" r="11" fill="none" stroke="#F9A825" stroke-width="1.2" opacity="0.6"/><text x="16" y="21" font-size="12" text-anchor="middle" fill="#8D6E00" font-weight="bold">₹</text></svg>'],
+        'sekeb'            => ['cat' => 'سکه', 'name' => 'سکه بهار آزادی', 'icon' => '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="15" fill="#FFD54F" stroke="#F9A825" stroke-width="2"/><circle cx="16" cy="16" r="11" fill="none" stroke="#F9A825" stroke-width="1.2" opacity="0.6"/><text x="16" y="21" font-size="12" text-anchor="middle" fill="#8D6E00" font-weight="bold">₹</text></svg>'],
+        'retail_nim'       => ['cat' => 'سکه', 'name' => 'نیم سکه', 'icon' => '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="15" fill="#FFD54F" stroke="#F9A825" stroke-width="2"/><path d="M16 1 A15 15 0 0 1 16 31 Z" fill="#F9A825" opacity="0.5"/><text x="16" y="21" font-size="12" text-anchor="middle" fill="#8D6E00" font-weight="bold">½</text></svg>'],
         'retail_rob'       => ['cat' => 'سکه', 'name' => 'ربع سکه', 'icon' => '¼'],
         'retail_gerami'    => ['cat' => 'سکه', 'name' => 'گرمی', 'icon' => '🔹'],
         'coin_blubber'     => ['cat' => 'سکه', 'name' => 'حباب سکه', 'icon' => '🫧'],
         // Crypto
-        'crypto-bitcoin'   => ['cat' => 'کریپتو', 'name' => 'بیتکوین', 'icon' => '🟠'],
+        'crypto-bitcoin'   => ['cat' => 'کریپتو', 'name' => 'بیتکوین', 'icon' => '<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="16" fill="#F7931A"/><path d="M22.9 14.2c.3-2.1-1.3-3.2-3.4-4l.7-2.7-1.7-.4-.7 2.6c-.4-.1-.9-.2-1.4-.3l.7-2.6-1.7-.4-.7 2.7-1.1-.3-2.3-.6-.5 1.8s1.3.3 1.2.3c.7.2.8.6.8.9l-.8 3.1v.1l-1.1 4.5c-.1.2-.3.5-.8.4 0 0-1.2-.3-1.2-.3l-.8 1.9 2.2.5 1.2.3-.7 2.8 1.7.4.7-2.7c.5.1.9.2 1.4.4l-.7 2.7 1.7.4.7-2.8c2.9.5 5 .3 5.9-2.3.7-2.1 0-3.3-1.5-4.1 1.1-.2 1.9-1 2.1-2.5zm-3.8 5.5c-.5 2.1-4.1 1-5.2.7l.9-3.8c1.1.3 4.8.8 4.3 3.1zm.5-5.5c-.5 2-3.4 1-4.4.7l.8-3.4c1 .2 4.2.7 3.6 2.7z" fill="#fff"/></svg>'],
         'crypto-tether'    => ['cat' => 'کریپتو', 'name' => 'تتر', 'icon' => '💵'],
         'crypto-ethereum'  => ['cat' => 'کریپتو', 'name' => 'اتریوم', 'icon' => '🔷'],
         'crypto-bnb'       => ['cat' => 'کریپتو', 'name' => 'بایننس کوین', 'icon' => '🟡'],
