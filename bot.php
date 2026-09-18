@@ -6,7 +6,7 @@
  */
 
 // ============ CONFIG ============
-define('BOT_TOKEN', '8493445622:***');
+define('BOT_TOKEN', '8493445622:AAGgVuD7e3wyMkBweAh44zgz2YI-ebJse4s');
 define('API_URL', 'https://api.telegram.org/bot' . BOT_TOKEN . '/');
 define('CACHE_FILE', __DIR__ . '/cache.json');
 define('CACHE_TTL', 30); // seconds
@@ -146,18 +146,56 @@ $CAT_TITLES = [
 ];
 
 // ============ CACHE ============
+// Resilient loader: try local cache.json first; if missing/stale, fetch the
+// live API (which also regenerates the cache file). Never returns [] on a
+// transient cache miss.
 function load_cache() {
     static $cache = null;
     if ($cache !== null) return $cache;
-    if (!file_exists(CACHE_FILE)) return [];
-    $raw = @file_get_contents(CACHE_FILE);
-    if (!$raw) return [];
+
+    // 1) local cache file, if fresh
+    if (file_exists(CACHE_FILE)) {
+        $raw = @file_get_contents(CACHE_FILE);
+        $data = json_decode($raw, true);
+        if (is_array($data) && (time() - ($data['ts_unix'] ?? 0) <= 300)) {
+            $cats = $data['categories'] ?? [];
+            if ($cats) { $cache = $cats; return $cache; }
+        }
+    }
+
+    // 2) fall back to the live API (api.php writes cache.json for next time)
+    $api = API_URL_SELF();
+    $ch = curl_init($api);
+    curl_setopt_array($ch, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_TIMEOUT => 15,
+    ]);
+    $raw = curl_exec($ch);
+    curl_close($ch);
     $data = json_decode($raw, true);
-    if (!is_array($data)) return [];
-    $age = time() - ($data['ts_unix'] ?? 0);
-    if ($age > 300) return []; // stale
-    $cache = $data['categories'] ?? [];
-    return $cache;
+    if (is_array($data)) {
+        $cats = $data['categories'] ?? [];
+        if ($cats) { $cache = $cats; return $cats; }
+    }
+
+    // 3) last resort: serve stale cache rather than nothing
+    if (file_exists(CACHE_FILE)) {
+        $data = json_decode(@file_get_contents(CACHE_FILE), true);
+        if (is_array($data)) {
+            $cats = $data['categories'] ?? [];
+            if ($cats) { $cache = $cats; return $cats; }
+        }
+    }
+
+    return [];
+}
+
+// absolute URL of api.php in this same directory
+function API_URL_SELF() {
+    $dir = dirname($_SERVER['SCRIPT_NAME'] ?? '/prices/bot.php');
+    $host = $_SERVER['HTTP_HOST'] ?? 'hodhodcandy.ir';
+    $proto = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+    return "{$proto}://{$host}{$dir}/api.php";
 }
 
 function get_item($slug) {
