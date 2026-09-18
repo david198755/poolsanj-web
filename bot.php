@@ -6,7 +6,7 @@
  */
 
 // ============ CONFIG ============
-define('BOT_TOKEN', '8493445622:AAGs4m9jU_D0mRJLJXKBm7G_cT8FYpVZ1Q4');
+define('BOT_TOKEN', '8493445622:***');
 define('API_URL', 'https://api.telegram.org/bot' . BOT_TOKEN . '/');
 define('CACHE_FILE', __DIR__ . '/cache.json');
 define('CACHE_TTL', 30); // seconds
