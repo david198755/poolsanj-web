@@ -155,6 +155,13 @@
             display: block;
             margin: 0 auto 6px;
         }
+        .card-icon img {
+            width: 28px;
+            height: 28px;
+            display: block;
+            margin: 0 auto 6px;
+            object-fit: contain;
+        }
         
         .card-name {
             font-size: 11px;
@@ -361,7 +368,11 @@
                 
                 cards += `
                     <div class="price-card${cardClass}">
-                        <div class="card-icon">${item.icon}</div>
+                        <div class="card-icon">${
+                            item.icon.startsWith('pics/')
+                              ? `<img src="${item.icon}" alt="${item.name}" loading="lazy">`
+                              : item.icon
+                        }</div>
                         <div class="card-name">${item.name}</div>
                         <div class="card-price">${item.price || '---'}</div>
                         <div class="card-change ${changeClass}">${item.change || '0'}</div>
